@@ -65,7 +65,8 @@ int read_story(std::string filename, std::string name, std::string dob){
 		texte+=ligne+"\n";
 	}
 	fichier.close();  // on referme le fichier
-	while(texte.find("$dob")!=-1 && texte.find("$name")!=-1){
+	size_t pos_dob;size_t pos_name;
+	while(pos_dob !=string::npos && pos_name != string::npos){
         	size_t pos_dob = texte.find("$dob");
 		texte.replace(pos_dob,sizeof("$dob"),dob);
 		size_t pos_name = texte.find("$name");
@@ -81,10 +82,13 @@ int read_story(std::string filename, std::string name, std::string dob){
 
 /////////////////////////////////////////////////////////Fonction principale
 int main(int argc, char *argv[]) {
-/*    if(argc<4){
+      if(argc<4){
         cout << "ERREUR: Impossible d'ouvrir le fichier." << std::endl;
         return 0;
-	}*/
-	read_story("histoire_1.txt","max","08011996");
-    
+	}
+
+	read_story(argv[1],argv[2],argv[3]);
+	int day; int month; int year;bool valid;
+   	valid=parse_date(argv[3],day,month,year);
+	std::cout<<valid<<"\n";	
 }
