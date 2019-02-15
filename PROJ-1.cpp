@@ -31,6 +31,30 @@ bool is_date(int day, int month, int year) {
     return ret;
 }
 
+bool parse_date(std::string date_name, int& day, int& month, int& year){
+    bool valid = true;
+
+    int slash_1 = date_name.find('/',0);
+    int slash_2 = date_name.find('/',slash_1+1);
+
+    std::string day_str = date_name.substr(0,2);
+    std::string month_str = date_name.substr(slash_1+1,2);
+    std::string year_str = date_name.substr(slash_2+1,4);
+
+
+    day = stoi(day_str);
+    month = stoi(month_str);
+    year = stoi(year_str);
+
+    valid = is_date(day, month, year);
+
+    if (slash_1==-1 or slash_2==-1){
+        valid = false;
+    }
+
+    return valid;
+}
+
 int read_story(std::string filename, std::string name, std::string dob){
     ifstream fichier(filename.c_str());  //déclaration du flux et ouverture du fichier
     if(fichier)  // si l'ouverture a réussi
