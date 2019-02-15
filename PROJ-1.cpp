@@ -66,11 +66,22 @@ int read_story(std::string filename, std::string name, std::string dob){
 	}
 	fichier.close();  // on referme le fichier
 	size_t pos_dob;size_t pos_name;
-	while(pos_dob !=string::npos && pos_name != string::npos){
-        	size_t pos_dob = texte.find("$dob");
-		texte.replace(pos_dob,sizeof("$dob"),dob);
-		size_t pos_name = texte.find("$name");
-		texte.replace(pos_name,sizeof("$name"),name);
+	while(pos_dob !=string::npos || pos_name != string::npos){
+		if(pos_dob !=string::npos && pos_name != string::npos){
+			pos_dob = texte.find("$dob");
+			texte.replace(pos_dob,sizeof("$dob"),dob);
+			pos_name = texte.find("$name");
+			texte.replace(pos_name,sizeof("$name"),name);
+		}
+		if(pos_dob ==string::npos && pos_name != string::npos){
+			pos_name = texte.find("$name");
+			texte.replace(pos_name,sizeof("$name"),name);
+		}
+		if(pos_dob !=string::npos && pos_name == string::npos){
+			pos_dob = texte.find("$dob");
+			texte.replace(pos_dob,sizeof("$dob"),name);
+		}
+	pos_dob = texte.find("$dob");pos_name = texte.find("$name");	
 	}
 
 	cout<<texte<<std::endl;   
@@ -82,13 +93,19 @@ int read_story(std::string filename, std::string name, std::string dob){
 
 /////////////////////////////////////////////////////////Fonction principale
 int main(int argc, char *argv[]) {
-      if(argc<4){
-        cout << "ERREUR: Impossible d'ouvrir le fichier." << std::endl;
+      if(argc!=4){
+        cout << "ERREUR: nombre d'argument(s) incorrect(s)" << std::endl;
         return 0;
 	}
-
-	read_story(argv[1],argv[2],argv[3]);
 	int day; int month; int year;bool valid;
-   	valid=parse_date(argv[3],day,month,year);
+	valid=parse_date(argv[3],day,month,year);
+	if(valid){
+		read_story(argv[1],argv[2],argv[3]);
+	}
+	else{
+		cout << "ERREUR: Date dans le mauvais format (jj/mm/aaaa)" << std::endl;
+	}
+		
+   	
 	std::cout<<valid<<"\n";	
 }
