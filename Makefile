@@ -1,11 +1,11 @@
 CXXFLAGS= -g -Wall -Wextra -O2
 
-all: executable
+all: create_story
 
-executable: PROJ-1.cpp PROJ-1.hpp
-	g++ -std=c++11 -o executable PROJ-1.cpp
+create_story: PROJ-1.cpp PROJ-1.hpp
+	g++ -std=c++11 -o create_story PROJ-1.cpp
 
 
 clean: 
-	rm -f format/*.o *.o executable *~ 
+	rm -f format/*.o *.o create_story *~ 
 

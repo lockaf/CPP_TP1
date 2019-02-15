@@ -68,44 +68,47 @@ int read_story(std::string filename, std::string name, std::string dob){
 	size_t pos_dob;size_t pos_name;
 	while(pos_dob !=string::npos || pos_name != string::npos){
 		if(pos_dob !=string::npos && pos_name != string::npos){
-			pos_dob = texte.find("$dob");
-			texte.replace(pos_dob,sizeof("$dob"),dob);
-			pos_name = texte.find("$name");
-			texte.replace(pos_name,sizeof("$name"),name);
+			pos_dob = texte.find("$(dob)");
+			texte.replace(pos_dob,sizeof("$(dob)")-1,dob);
+			pos_name = texte.find("$(name)");
+			texte.replace(pos_name,sizeof("$(name)")-1,name);
 		}
 		if(pos_dob ==string::npos && pos_name != string::npos){
-			pos_name = texte.find("$name");
-			texte.replace(pos_name,sizeof("$name"),name);
+			pos_name = texte.find("$(name)");
+			texte.replace(pos_name,sizeof("$(name)")-1,name);
 		}
 		if(pos_dob !=string::npos && pos_name == string::npos){
-			pos_dob = texte.find("$dob");
-			texte.replace(pos_dob,sizeof("$dob"),name);
+			pos_dob = texte.find("$(dob)");
+			texte.replace(pos_dob,sizeof("$(dob)"),name);
 		}
-	pos_dob = texte.find("$dob");pos_name = texte.find("$name");	
+	pos_dob = texte.find("$(dob)");pos_name = texte.find("$(name)");	
 	}
 
 	cout<<texte<<std::endl;   
+	return 0;
     }
     else{  // sinon
-        std::cerr << "Erreur à l'ouverture !" << std::endl;
+        std::cerr << "Error 3 : Story "+ filename +" not found" << std::endl;
+	return 3;
     }
 }
 
 /////////////////////////////////////////////////////////Fonction principale
 int main(int argc, char *argv[]) {
-      if(argc!=4){
-        cout << "ERREUR: nombre d'argument(s) incorrect(s)" << std::endl;
-        return 0;
+      if(argc<4){
+        std::cerr << "Error 1 : Running out of arguments" << std::endl;
+        return 1;
 	}
-	int day; int month; int year;bool valid;
+	int day; int month; int year;bool valid;int ret;
 	valid=parse_date(argv[3],day,month,year);
 	if(valid){
-		read_story(argv[1],argv[2],argv[3]);
+		ret=read_story(argv[1],argv[2],argv[3]);
 	}
 	else{
-		cout << "ERREUR: Date dans le mauvais format (jj/mm/aaaa)" << std::endl;
+		std::string dob = argv[3];
+		std::cerr << "Error 2 : Date "+ dob + " not valid" << std::endl;
+		ret=2;
 	}
-		
-   	
-	std::cout<<valid<<"\n";	
+	return ret;
+
 }
